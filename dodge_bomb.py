@@ -49,6 +49,14 @@ def game_over(screen:pg.Surface) -> None:  # ゲームオーバー画面
     time.sleep(5)
 
     
+def bomb():
+    bb_imgs = []
+    bb_accs = [a for a in range(1, 11)]
+    for r in range(1,11):
+        bb_img = pg.Surface((20*r, 20*r))
+        pg.draw.circle(bb_img, (255, 0, 0), (10*r, 10*r), 10*r)
+        bb_imgs.append(bb_img)
+    return bb_imgs, bb_accs
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
