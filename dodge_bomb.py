@@ -1,6 +1,7 @@
 import os
 import random
 import sys
+import time
 import pygame as pg
 
 
@@ -11,6 +12,7 @@ DELTA = {pg.K_UP: (0, -5),
          pg.K_RIGHT: (+5, 0)
          }
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 
 
 def check_bound(obj_rct: pg.Rect) -> tuple[bool, bool]:
@@ -28,6 +30,25 @@ def check_bound(obj_rct: pg.Rect) -> tuple[bool, bool]:
     return yoko, tate
 
 
+def game_over(screen:pg.Surface) -> None:  # ゲームオーバー画面
+    """
+    引数:PygameのSurfaceオブジェクト
+    戻り値:無し
+    """
+    background = pg.Surface((WIDTH, HEIGHT))
+    pg.draw.rect(background, (0, 0, 0), background.get_rect())
+    background.set_alpha(130)
+    screen.blit(background, (0, 0))
+    mozi = pg.font.Font(None, 80)
+    txt = mozi.render("Game Over", True, (0, 0, 0))
+    screen.blit(txt, [WIDTH // 2 - 130, HEIGHT // 2]) 
+    naiteru_img = pg.transform.rotozoom(pg.image.load("fig/8.png"), 0, 0.9)
+    screen.blit(naiteru_img, [WIDTH // 2 - 200, HEIGHT // 2])
+    screen.blit(naiteru_img, [WIDTH // 2 + 200, HEIGHT // 2])
+    pg.display.update()
+    time.sleep(5)
+
+    
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -50,7 +71,7 @@ def main():
                 return
         screen.blit(bg_img, [0, 0]) 
         if kk_rct.colliderect(bb_rct):  # こうかとんと爆弾が重なっていたら
-            print("gameover")
+            game_over(screen)
             return
 
         key_lst = pg.key.get_pressed()
@@ -83,8 +104,10 @@ def main():
         clock.tick(50)
 
 
+
 if __name__ == "__main__":
     pg.init()
     main()
     pg.quit()
     sys.exit()
+
